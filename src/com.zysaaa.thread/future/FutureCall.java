@@ -1,3 +1,5 @@
+package future;
+
 import java.util.concurrent.*;
 
 /**
@@ -13,7 +15,7 @@ public class FutureCall {
 
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        test00();
+        test000();
     }
 
     private static void test00() throws ExecutionException, InterruptedException {
@@ -81,6 +83,33 @@ public class FutureCall {
         // mayInterruptIfRunning会去中断 Thread.sleep(3000); 这个操作。
         System.out.println(submit.cancel(false));
         System.out.println(submit.cancel(true));
+    }
+
+
+    private static void test000() throws ExecutionException, InterruptedException {
+        FutureTask<Integer> futureTask = new FutureTask<>(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Thread.sleep(3000);
+                return 1;
+            }
+        });
+        new Thread(() -> {
+            futureTask.run();
+        }).start();
+        System.out.println(futureTask.get());
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    System.out.println(futureTask.get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();;*/
     }
 
 }
